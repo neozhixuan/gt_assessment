@@ -1,0 +1,323 @@
+{
+	"info": {
+		"_postman_id": "b5cf6176-84b6-4d7b-8544-2162bf2644a6",
+		"name": "GT_Assessment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18661285"
+	},
+	"item": [
+		{
+			"name": "Applicants GET",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/applicants",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"applicants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Applicants POST",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"01913b7a-4493-74b2-93f8-e684c4ca935d\",\r\n    \"name\": \"Johnson\",\r\n    \"sex\": \"male\",\r\n    \"date_of_birth\": \"1990-07-02\",\r\n    \"employment_status\": \"unemployed\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/applicants",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"applicants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Applicants PUT",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Jameson\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/applicants?applicant=01913b7a-4493-74b2-93f8-e684c4ca935c",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"applicants"
+					],
+					"query": [
+						{
+							"key": "applicant",
+							"value": "01913b7a-4493-74b2-93f8-e684c4ca935c"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Applicants DELETE",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/applicants?applicant=01913b7a-4493-74b2-93f8-e684c4ca935c",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"applicants"
+					],
+					"query": [
+						{
+							"key": "applicant",
+							"value": "01913b7a-4493-74b2-93f8-e684c4ca935c"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Schemes GET ALL",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/schemes",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"schemes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Schemes GET ELIGIBLE",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/schemes?applicant=01913b80-2c04-7f9d-86a4-497ef68cb3a0",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"schemes"
+					],
+					"query": [
+						{
+							"key": "applicant",
+							"value": "01913b80-2c04-7f9d-86a4-497ef68cb3a0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Schemes POST",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"schemes\": [\r\n    {\r\n      \"id\": \"01913b89-9a43-7163-8757-01cc254783f6\",\r\n      \"name\": \"Welfare Scheme\",\r\n      \"criteria\": {\r\n        \"employment_status\": \"unemployed\",\r\n        \"education_levels\": [\"primary\", \"secondary\"],\r\n        \"marital_status\": null\r\n      },\r\n      \"benefits\": [\r\n        {\r\n          \"id\": \"01913b8b-9b12-7d2c-a1fa-ea613b802eb5\",\r\n          \"name\": \"SkillsFuture Credits\",\r\n          \"amount\": 400.00\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/schemes",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"schemes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Schemes PUT",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Retrenchment Assistance Welfare\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/schemes?scheme=01913b89-9a43-7163-8757-01cc254783f3",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"schemes"
+					],
+					"query": [
+						{
+							"key": "scheme",
+							"value": "01913b89-9a43-7163-8757-01cc254783f3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Applications GET",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/applications",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"applications"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Applications POST",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"01913b7a-4493-74b2-93f8-e684c4ca935o\",\r\n    \"applicant_id\":\"01913b7a-4493-74b2-93f8-e684c4ca935c\",\r\n    \"scheme_id\": \"01913b89-9a43-7163-8757-01cc254783f3\",\r\n    \"status\": \"Started\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/applications",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"applications"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Applications PUT",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"applicant_id\":\"01913b7a-4493-74b2-93f8-e684c4ca935c\",\r\n    \"scheme_id\": \"01913b89-9a43-7163-8757-01cc254783f3\",\r\n    \"status\": \"Finished\"\r\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/api/applications?application=8b1c0e65-a2b0-4419-8816-f4b88f58c4e8",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"applications"
+					],
+					"query": [
+						{
+							"key": "application",
+							"value": "8b1c0e65-a2b0-4419-8816-f4b88f58c4e8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Applications DELETE",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/applications?application=8b1c0e65-a2b0-4419-8816-f4b88f58c4e8",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"applications"
+					],
+					"query": [
+						{
+							"key": "application",
+							"value": "8b1c0e65-a2b0-4419-8816-f4b88f58c4e8"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
