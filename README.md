@@ -3,15 +3,17 @@
 ## Goal
 
 The goal of this assignment is to build a system that
-
--     Allows the management of a fictitious set of financial assistance schemes.
--     Save and update records of applicants who applied for schemes.
--     The system should advise users of schemes that each applicant can apply for.
--     The system should also save the outcome of granting of schemes to applicants.
+- Allows the management of a fictitious set of financial assistance schemes.
+- Save and update records of applicants who applied for schemes.
+- The system should advise users of schemes that each applicant can apply for.
+- The system should also save the outcome of granting of schemes to applicants.
 
 ## Description
 
 This is a backend system to manage financial assistance schemes and applications for needy individuals and families. The backend is written in Go and uses PostgreSQL as the database. We use Mux as the router, and joho as the environment manager.
+
+![image](https://github.com/user-attachments/assets/d0fdff57-bb88-4bfb-8d49-ab6923f56b2c)
+
 
 ### Prerequisites
 
