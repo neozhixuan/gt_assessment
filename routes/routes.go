@@ -15,7 +15,7 @@ func SetupRouter() *mux.Router {
 	r.HandleFunc("/api/applicants", controllers.DeleteApplicant).Methods("DELETE")
 	r.HandleFunc("/api/schemes", controllers.GetSchemes).Methods("GET")
 	r.HandleFunc("/api/schemes", controllers.DeleteScheme).Methods("DELETE")
-	// r.HandleFunc("/api/schemes", controllers.CreateScheme).Methods("POST")
+	r.HandleFunc("/api/schemes", controllers.CreateScheme).Methods("POST")
 	r.HandleFunc("/api/schemes", controllers.UpdateScheme).Methods("PUT")
 	r.HandleFunc("/api/schemes/eligible", controllers.GetEligibleSchemes).Methods("GET")
 	r.HandleFunc("/api/applications", controllers.GetApplications).Methods("GET")

@@ -3,7 +3,6 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/neozhixuan/gt_assessment/database"
@@ -19,8 +18,7 @@ func GetApplications(w http.ResponseWriter, r *http.Request) {
 	var applications []models.Application
 	rows, err := database.DB.Query("SELECT id, applicant_id, scheme_id, status FROM applications")
 	if err != nil {
-		log.Fatalf("Error fetching applications: %v", err)
-		http.Error(w, "Error fetching applications", http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Error fetching applications: %v", err), http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
@@ -30,8 +28,7 @@ func GetApplications(w http.ResponseWriter, r *http.Request) {
 		var application models.Application
 		err := rows.Scan(&application.ID, &application.ApplicantID, &application.SchemeID, &application.Status)
 		if err != nil {
-			log.Fatalf("Error scanning application: %v", err)
-			http.Error(w, "Error processing applications", http.StatusInternalServerError)
+			http.Error(w, fmt.Sprintf("Error processing applications: %v", err), http.StatusInternalServerError)
 			return
 		}
 		applications = append(applications, application)
@@ -48,7 +45,7 @@ func CreateApplication(w http.ResponseWriter, r *http.Request) {
 	// Create a decoder using the request and decode the request into our variable
 	err := json.NewDecoder(r.Body).Decode(&application)
 	if err != nil {
-		http.Error(w, "Invalid input", http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("Error input: %v", err), http.StatusBadRequest)
 		return
 	}
 
@@ -57,8 +54,7 @@ func CreateApplication(w http.ResponseWriter, r *http.Request) {
 	_, err = database.DB.Exec("INSERT INTO applications (id, applicant_id, scheme_id, status) VALUES ($1, $2, $3, $4)",
 		application.ID, application.ApplicantID, application.SchemeID, application.Status)
 	if err != nil {
-		log.Fatalf("Error inserting application: %v", err)
-		http.Error(w, "Error creating application", http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Error creating applications: %v", err), http.StatusInternalServerError)
 		return
 	}
 
@@ -78,7 +74,7 @@ func DeleteApplication(w http.ResponseWriter, r *http.Request) {
 	query := `DELETE FROM applications WHERE id = $1`
 	_, err := database.DB.Exec(query, applicationID)
 	if err != nil {
-		http.Error(w, "Failed to delete application", http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Error deleting applications: %v", err), http.StatusInternalServerError)
 		return
 	}
 
@@ -98,29 +94,29 @@ func UpdateApplication(w http.ResponseWriter, r *http.Request) {
 	// Parse request body
 	var application models.Application
 	if err := json.NewDecoder(r.Body).Decode(&application); err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("Invalid request: %v", err), http.StatusBadRequest)
 		return
 	}
 
 	// Build update query dynamically based on non-empty fields
-	query := "UPDATE application SET "
+	query := "UPDATE applications SET "
 	values := []interface{}{}
 	counter := 1
 
 	if application.ApplicantID != "" {
-		query += "name = $" + fmt.Sprint(counter) + ", "
+		query += "applicant_id = $" + fmt.Sprint(counter) + ", "
 		values = append(values, application.ApplicantID)
 		counter++
 	}
 
 	if application.SchemeID != "" {
-		query += "name = $" + fmt.Sprint(counter) + ", "
+		query += "scheme_id = $" + fmt.Sprint(counter) + ", "
 		values = append(values, application.SchemeID)
 		counter++
 	}
 
 	if application.Status != "" {
-		query += "employment_status = $" + fmt.Sprint(counter) + ", "
+		query += "status = $" + fmt.Sprint(counter) + ", "
 		values = append(values, application.Status)
 		counter++
 	}
@@ -135,7 +131,7 @@ func UpdateApplication(w http.ResponseWriter, r *http.Request) {
 	// Execute the query
 	_, err := database.DB.Exec(query, values...)
 	if err != nil {
-		http.Error(w, "Failed to update application", http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Failed to update application: %v", err), http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusOK)

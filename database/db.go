@@ -72,22 +72,32 @@ func initTables() {
 	schemesTable := `
 	CREATE TABLE IF NOT EXISTS schemes (
 		id UUID PRIMARY KEY,
-		name VARCHAR(255) NOT NULL,
-		criteria_ids UUID[],  -- Array of UUIDs referencing criteria
-		benefit_ids UUID[]    -- Array of UUIDs referencing benefits
+		name VARCHAR(255) NOT NULL
 	);`
 
 	criteriaTable := `CREATE TABLE IF NOT EXISTS criteria (
 		id UUID PRIMARY KEY,
-		marital_status VARCHAR(50) CHECK (marital_status IN ('single', 'married', 'widowed', 'divorced')),
-		employment_status VARCHAR(50) CHECK (employment_status IN ('employed', 'unemployed')),
-		education_levels text[]
+		marital_status VARCHAR(50) CHECK (marital_status IN ('single', 'married', 'widowed', 'divorced') OR marital_status IS NULL),
+		employment_status VARCHAR(50) CHECK (employment_status IN ('employed', 'unemployed') OR employment_status IS NULL),
+		education_levels TEXT[]
 	);`
 
 	benefitsTable := `CREATE TABLE IF NOT EXISTS benefits (
 		id UUID PRIMARY KEY,
 		name VARCHAR(255) NOT NULL,
 		amount NUMERIC(10, 2) NOT NULL  -- Benefit amount	
+	);`
+
+	schemeCriteriaTable := `CREATE TABLE IF NOT EXISTS scheme_criteria (
+		scheme_id UUID REFERENCES schemes(id) ON DELETE CASCADE,
+		criteria_id UUID REFERENCES criteria(id) ON DELETE CASCADE,
+		PRIMARY KEY (scheme_id, criteria_id)
+	);`
+
+	schemeBenefitsTable := `CREATE TABLE IF NOT EXISTS scheme_benefits (
+		scheme_id UUID REFERENCES schemes(id) ON DELETE CASCADE,
+		benefit_id UUID REFERENCES benefits(id) ON DELETE CASCADE,
+		PRIMARY KEY (scheme_id, benefit_id)
 	);`
 
 	// Execute table creation
@@ -121,6 +131,17 @@ func initTables() {
 	if err != nil {
 		log.Fatalf("Error creating benefits table: %v", err)
 	}
+
+	_, err = DB.Exec(schemeCriteriaTable)
+	if err != nil {
+		log.Fatalf("Error creating scheme-criteria table: %v", err)
+	}
+
+	_, err = DB.Exec(schemeBenefitsTable)
+	if err != nil {
+		log.Fatalf("Error creating scheme-benefits table: %v", err)
+	}
+
 }
 
 // Function to seed initial data
@@ -166,10 +187,10 @@ func seedData() {
 		// Insert seed data for schemes
 		insertSchemes := `
 		-- Insert the first scheme
-		INSERT INTO schemes (id, name, criteria_ids, benefit_ids) 
+		INSERT INTO schemes (id, name) 
 		VALUES 
-		('01913b89-9a43-7163-8757-01cc254783f3'::uuid, 'Retrenchment Assistance Scheme', ARRAY['01913b89-9a43-7163-8757-01cc254783f3'::uuid], ARRAY['01913b8b-9b12-7d2c-a1fa-ea613b802ebc'::uuid]),
-		('01913b89-befc-7ae3-bb37-3079aa7f1be0'::uuid, 'Retrenchment Assistance Scheme (families)', ARRAY['01913b89-befc-7ae3-bb37-3079aa7f1be0'::uuid], NULL);
+		('01913b89-9a43-7163-8757-01cc254783f3'::uuid, 'Retrenchment Assistance Scheme'),
+		('01913b89-befc-7ae3-bb37-3079aa7f1be0'::uuid, 'Retrenchment Assistance Scheme (families)');
 		`
 
 		_, err = DB.Exec(insertSchemes)
@@ -200,6 +221,31 @@ func seedData() {
 		if err != nil {
 			log.Fatalf("Error inserting seed schemes: %v", err)
 		}
+
+		// Insert seed data for schemes-benefit
+		insertSchemesBenefit := `
+		INSERT INTO scheme_benefits (scheme_id, benefit_id)
+		VALUES ('01913b89-9a43-7163-8757-01cc254783f3'::uuid, '01913b8b-9b12-7d2c-a1fa-ea613b802ebc'::uuid);
+		`
+
+		_, err = DB.Exec(insertSchemesBenefit)
+		if err != nil {
+			log.Fatalf("Error inserting scheme-benefit: %v", err)
+		}
+
+		// Insert seed data for schemes-benefit
+		insertSchemesCriteria := `
+		INSERT INTO scheme_criteria (scheme_id, criteria_id)
+		VALUES 
+		('01913b89-9a43-7163-8757-01cc254783f3'::uuid, '01913b89-9a43-7163-8757-01cc254783f3'::uuid),
+		('01913b89-befc-7ae3-bb37-3079aa7f1be0'::uuid, '01913b89-befc-7ae3-bb37-3079aa7f1be0'::uuid);
+		`
+
+		_, err = DB.Exec(insertSchemesCriteria)
+		if err != nil {
+			log.Fatalf("Error inserting scheme-criteria: %v", err)
+		}
+
 	} else {
 		log.Println("Database has been populated, no seeding done.")
 	}

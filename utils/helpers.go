@@ -28,3 +28,11 @@ func CalculateAge(dob string) int {
 	}
 	return years
 }
+
+// nilIfEmpty function
+func NilIfEmpty(str string) interface{} {
+	if str == "" {
+		return nil
+	}
+	return str
+}

@@ -3,7 +3,6 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/neozhixuan/gt_assessment/database"
@@ -23,8 +22,7 @@ func GetApplicants(w http.ResponseWriter, r *http.Request) {
 	rows, err := database.DB.Query(`SELECT id, name, employment_status, sex, date_of_birth FROM applicants`)
 	// Error control by writing into the ResponseWriter + closing the DB
 	if err != nil {
-		log.Printf("Error fetching applicants: %v", err)
-		utils.SendJSONResponse(w, http.StatusInternalServerError, "Unable to fetch applicants")
+		utils.SendJSONResponse(w, http.StatusInternalServerError, fmt.Sprintf("Unable to fetch applicants: %v", err))
 		return
 	}
 	defer rows.Close()
@@ -35,8 +33,7 @@ func GetApplicants(w http.ResponseWriter, r *http.Request) {
 		var applicant models.Applicant
 		// Fetch each individual data into the empty applicants variable
 		if err := rows.Scan(&applicant.ID, &applicant.Name, &applicant.EmploymentStatus, &applicant.Sex, &applicant.DateOfBirth); err != nil {
-			log.Printf("Error scanning applicant: %v", err)
-			utils.SendJSONResponse(w, http.StatusInternalServerError, "Error scanning applicants")
+			utils.SendJSONResponse(w, http.StatusInternalServerError, fmt.Sprintf("Error scanning applicants: %v", err))
 			return
 		}
 		// Append it to our list of applicants initialised at the top
@@ -56,7 +53,7 @@ func CreateApplicant(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&applicant)
 	// Error control by writing into the ResponseWriter
 	if err != nil {
-		utils.SendJSONResponse(w, http.StatusBadRequest, "Invalid request payload")
+		utils.SendJSONResponse(w, http.StatusBadRequest, fmt.Sprintf("Invalid request payload: %v", err))
 		return
 	}
 
@@ -67,8 +64,7 @@ func CreateApplicant(w http.ResponseWriter, r *http.Request) {
 	query := `INSERT INTO applicants (id, name, employment_status, sex, date_of_birth) VALUES ($1, $2, $3, $4, $5)`
 	_, err = database.DB.Exec(query, applicant.ID, applicant.Name, applicant.EmploymentStatus, applicant.Sex, applicant.DateOfBirth)
 	if err != nil {
-		log.Printf("Error creating applicant: %v", err)
-		utils.SendJSONResponse(w, http.StatusInternalServerError, "Error creating applicant")
+		utils.SendJSONResponse(w, http.StatusInternalServerError, fmt.Sprintf("Error creating applicant: %v", err))
 		return
 	}
 	// Write our response using ResponseWriter
@@ -87,7 +83,7 @@ func UpdateApplicant(w http.ResponseWriter, r *http.Request) {
 	// Parse request body
 	var applicant models.Applicant
 	if err := json.NewDecoder(r.Body).Decode(&applicant); err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("Invalid request payload: %v", err), http.StatusBadRequest)
 		return
 	}
 
@@ -134,7 +130,7 @@ func UpdateApplicant(w http.ResponseWriter, r *http.Request) {
 	// Execute the query
 	_, err := database.DB.Exec(query, values...)
 	if err != nil {
-		http.Error(w, "Failed to update applicant", http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Error updating applicants: %v", err), http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
@@ -153,7 +149,7 @@ func DeleteApplicant(w http.ResponseWriter, r *http.Request) {
 	query := `DELETE FROM applicants WHERE id = $1`
 	_, err := database.DB.Exec(query, applicantID)
 	if err != nil {
-		http.Error(w, "Failed to delete applicant", http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Error deletings applicants: %v", err), http.StatusInternalServerError)
 		return
 	}
 
